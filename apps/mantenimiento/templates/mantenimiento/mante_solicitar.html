@@ -1,0 +1,50 @@
+{% load static %}
+{% block content %}
+<div class="p-6 bg-white rounded-lg shadow">
+    <h2 class="text-xl font-semibold mb-4">Solicitar Mantenimiento Preventivo</h2>
+
+    <form hx-post="{% url 'mantenimiento:mante_solicitar' %}"
+          hx-target="#dashboard-content"
+          hx-swap="innerHTML"
+          class="space-y-4">
+        {% csrf_token %}
+
+        <!-- Tipo -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Tipo de mantenimiento</label>
+            <select name="tipo" class="w-full mt-1 border rounded p-2">
+                <option value="preventivo">Preventivo</option>
+                <option value="correctivo">Correctivo</option>
+            </select>
+        </div>
+
+        <!-- Descripción -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Descripción</label>
+            <textarea name="descripcion" rows="3" class="w-full mt-1 border rounded p-2"
+                      placeholder="Describe el problema o solicitud..."></textarea>
+        </div>
+
+        <!-- Fechas tentativas -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Fecha tentativa de inicio</label>
+                <input type="date" name="fecha_inicio" class="w-full mt-1 border rounded p-2">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Fecha tentativa de fin</label>
+                <input type="date" name="fecha_fin" class="w-full mt-1 border rounded p-2">
+            </div>
+        </div>
+
+        <!-- Botón -->
+        <div class="pt-2">
+            <button type="submit" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition">
+                Enviar solicitud
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
