@@ -1,0 +1,248 @@
+{% load static %}
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <div class="mb-6 flex justify-between items-center">
+        <h1 class="text-2xl font-bold"> Usuarios
+        </h1>
+        <div class="space-x-4 flex justify-between">
+            <button
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onclick="openUserModal()">
+                <i class="fa-solid fa-plus mr-2"></i> Añadir Usuarios
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-4">Lista de Usuarios</h1>
+    <div class="overflow-auto rounded-lg shadow-lg border border-gray-200 ">
+        <table class="min-w-full bg-white text-sm">
+            <thead class="bg-blue-600 text-white sticky top-0 z-10">
+                <tr>
+                    <th class="px-4 py-2 text-left uppercase text-sm">N°</th>
+                    <th class="px-4 py-2 text-left uppercase text-sm">Codigo</th>
+                    <th class="px-4 py-2 text-left uppercase text-sm">Usuario</th>
+                    <th class="px-4 py-2 text-left uppercase text-sm">Rol</th>
+                    <th class="px-4 py-2 text-left uppercase text-sm">Equipo</th>
+                    <th class="px-4 py-2 text-left uppercase text-sm">Lugar</th>
+                    <th class="px-4 py-2 text-left uppercase text-sm">Area</th>
+                    <th class="px-4 py-2 text-left uppercase text-sm">Estado</th>
+                    <th class="px-4 py-2 text-left uppercase text-sm">Firma</th>
+                    <th class="px-4 py-2 text-left uppercase text-sm">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for user in users %}
+                <tr class="hover:bg-gray-100">
+                    <td class="px-4 py-2">{{ forloop.counter }}</td>
+                    <td class="px-4 py-2">{{ user.codigo }}</td>
+                    <td class="px-4 py-2">{{ user.username }}</td>
+                    <td class="px-4 py-2">{{ user.role }}</td>
+                    <td class="px-4 py-2">{% if user.id_equipo %}
+                        AEC- {{ user.id_equipo.aec }}
+                        {% else %}
+                        <span class="text-gray-400">Sin equipo asignado</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-2"> {% if user.id_lugar %}
+                        {{ user.id_lugar.nombre }}
+                        {% else %}
+                        <span class="text-gray-400">Sin lugar asignado</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-2">{% if user.id_lugar %}
+                        {{ user.id_lugar.area }}
+                        {% else %}
+                        <span class="text-gray-400">Sin área asignada</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-2">
+                        {% if user.is_active == 1 %}
+                        <span class="px-3 py-1 rounded-full bg-green-500 text-white font-semibold">
+                            {{ "Activo"}}</span>
+                        {% else %}
+                        <span class="px-3 py-1 rounded-full bg-red-500 text-white font-semibold">
+                            {{ "Inactivo"}}</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-2">
+                        {% if user.firma %}
+                        <button onclick="openFirmaModal('{{ user.firma.url }}')">
+                            <img src="{{ user.firma.url }}" alt="Firma de {{ user.username }}"
+                                class="w-10 h-10 object-cover rounded-full cursor-pointer border-2 border-blue-500">
+                        </button>
+                        {% else %}
+                        <p>No hay firma</p>
+                        {% endif %}
+                    </td>
+                    <th class="px-4 py-2 text-left uppercase text-sm"></th>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="10" class="px-4 py-6 text-center text-gray-400">No hay Usuarios registrados</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<!-- Modal FIRMA -->
+<div id="firmaModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white p-4 rounded shadow-lg relative">
+        <button onclick="closeFirmaModal()"
+            class="absolute top-2 right-2 text-gray-600 hover:text-black">&times;</button>
+        <img id="firmaModalImg" src="" alt="Firma" class="max-w-full max-h-[80vh]">
+    </div>
+</div>
+
+
+<!-- Modal USUARIO -->
+<div id="userModal"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center {% if not form.errors %}hidden{% endif %} z-50">
+
+    <div class="bg-white p-6 rounded shadow-lg relative w-11/12 max-w-lg overflow-y-auto" style="max-height: 90vh;">
+
+        <a href="{% url 'users:user_list' %}"
+            class="absolute top-2 right-2 text-gray-600 hover:text-black text-2xl">&times;</a>
+
+        <h2 id="modalTitle" class="text-xl font-bold mb-4">Agregar Usuario</h2>
+
+        <form method="POST" enctype="multipart/form-data" class="space-y-3">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="p-3 bg-red-100 text-red-700 rounded">
+                {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                    <label class="block mb-1 font-medium">Username:</label>
+                    {{ form.username }}
+                    {% for error in form.username.errors %}<div class="text-red-500 text-sm mt-1">{{ error }}</div>{%
+                    endfor %}
+                </div>
+                <div>
+                    <label class="block mb-1 font-medium">Correo electrónico:</label>
+                    {{ form.email }}
+                    {% for error in form.email.errors %}<div class="text-red-500 text-sm mt-1">{{ error }}</div>{%
+                    endfor %}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                    <label class="block mb-1 font-medium">{{ form.password.label }}:</label>
+                    {{ form.password }}
+                    {% for error in form.password.errors %}<div class="text-red-500 text-sm mt-1">{{ error }}</div>{%
+                    endfor %}
+                </div>
+                <div>
+                    <label class="block mb-1 font-medium">{{ form.password_confirm.label }}:</label>
+                    {{ form.password_confirm }}
+                    {% for error in form.password_confirm.errors %}<div class="text-red-500 text-sm mt-1">{{ error }}
+                    </div>{% endfor %}
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                    <label class="block mb-1 font-medium">Código:</label>
+                    {{ form.codigo }}
+                    {% for error in form.codigo.errors %}<div class="text-red-500 text-sm mt-1">{{ error }}</div>{%
+                    endfor %}
+                </div>
+                <div>
+                    <label class="block mb-1 font-medium">Rol:</label>
+                    {{ form.role }}
+                    {% for error in form.role.errors %}<div class="text-red-500 text-sm mt-1">{{ error }}</div>{% endfor
+                    %}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                    <label class="block mb-1 font-medium">Equipo:</label>
+                    {{ form.id_equipo }}
+                    {% for error in form.id_equipo.errors %}<div class="text-red-500 text-sm mt-1">{{ error }}</div>{%
+                    endfor %}
+                </div>
+                <div>
+                    <label class="block mb-1 font-medium">Lugar:</label>
+                    {{ form.id_lugar }}
+                    {% for error in form.id_lugar.errors %}<div class="text-red-500 text-sm mt-1">{{ error }}</div>{%
+                    endfor %}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                    <label class="block mb-1 font-medium">Nombre:</label>
+                    {{ form.nombre }}
+                    {% for error in form.nombre.errors %}<div class="text-red-500 text-sm mt-1">{{ error }}</div>{%
+                    endfor %}
+                </div>
+                <div>
+                    <label class="block mb-1 font-medium">Apellido Paterno:</label>
+                    {{ form.apellido_p }}
+                    {% for error in form.apellido_p.errors %}<div class="text-red-500 text-sm mt-1">{{ error }}</div>{%
+                    endfor %}
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                    <label class="block mb-1 font-medium">Apellido Materno:</label>
+                    {{ form.apellido_m }}
+                    {% for error in form.apellido_m.errors %}<div class="text-red-500 text-sm mt-1">{{ error }}</div>{%
+                    endfor %}
+                </div>
+                <div>
+                    <label class="block mb-1 font-medium">Teléfono:</label>
+                    {{ form.telefono }}
+                    {% for error in form.telefono.errors %}<div class="text-red-500 text-sm mt-1">{{ error }}</div>{%
+                    endfor %}
+                </div>
+            </div>
+
+            <div>
+                <label class="block mb-1 font-medium">Firma:</label>
+                {{ form.firma }}
+                {% for error in form.firma.errors %}<div class="text-red-500 text-sm mt-1">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="flex items-center space-x-2 pt-2">
+                {{ form.is_active }}
+                <label class="font-medium" for="{{ form.is_active.id_for_label }}">Activo</label>
+                {% for error in form.is_active.errors %}<div class="text-red-500 text-sm ml-4">{{ error }}</div>{%
+                endfor %}
+            </div>
+
+            <button type="submit"
+                class="flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition w-full">
+                Guardar
+            </button>
+        </form>
+
+    </div>
+</div>
+
+
+
+
+
+
+<script src="{% static 'js/users/user_firma.js' %}"></script>
+<script src="{% static 'js/users/user_modal.js' %}"></script>
+
+{% endblock %}

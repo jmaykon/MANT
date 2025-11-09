@@ -33,10 +33,12 @@ INSTALLED_APPS = [
     'apps.core',
     'apps.dashboard',
     'apps.mantenimiento',
-    'apps.agenda',
-    'apps.equipo',  
+    'apps.equipo', 
+    'apps.lugar',
     
 ]
+
+
 
 # ===== Middleware =====
 MIDDLEWARE = [
@@ -50,6 +52,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'MANTE.urls'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # ===== Templates =====
 TEMPLATES = [
@@ -87,10 +91,11 @@ DATABASES = {
     }
 }
 
+
+
+
 # ===== Custom User =====
-AUTH_USER_MODEL = 'users.CustomUser'
-
-
+AUTH_USER_MODEL = 'users.UsersCustomUser'
 # ===== Password Validators =====
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
@@ -100,11 +105,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # ===== Internacionalización =====
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'es-bo'  
+TIME_ZONE = 'America/La_Paz'
 USE_I18N = True
-USE_TZ = True
-
+USE_L10N = True
+USE_TZ = False 
 # ===== Static =====
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]

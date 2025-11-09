@@ -1,56 +1,70 @@
 from django.db import models
-
-class Lugar(models.Model):
-    idLugar = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=50)
-    direccion = models.CharField(max_length=100, blank=True, null=True)
-    ciudad = models.CharField(max_length=50, blank=True, null=True)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-    fecha_modificacion = models.DateTimeField(auto_now=True)
-    class Meta:
-        db_table = 'Lugar'
-    def __str__(self):
-        return self.nombre
-
-
-class Persona(models.Model):
-    idPersona = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=50)
-    apellidop = models.CharField(max_length=50, blank=True, null=True)
-    apellidom = models.CharField(max_length=50, blank=True, null=True)
-    telefono = models.CharField(max_length=20, blank=True, null=True)
-    area = models.CharField(max_length=50, blank=True, null=True)
-    idLugar = models.ForeignKey(Lugar, on_delete=models.PROTECT, db_column='idLugar')
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-    fecha_modificacion = models.DateTimeField(auto_now=True)
-    
-    class Meta:
-        db_table = 'Persona'
-    def __str__(self):
-        return f"{self.nombre} {self.apellidop or ''}"
-
+from apps.lugar.models import Lugar
+from django.conf import settings
+from django.utils import timezone
 
 class Equipo(models.Model):
-    idEquipo = models.AutoField(primary_key=True)
-    tipo = models.CharField(max_length=20)
-    aec = models.CharField(max_length=50)
-    marca = models.CharField(max_length=50, blank=True, null=True)
-    modelo = models.CharField(max_length=50, blank=True, null=True)
-    so = models.CharField(max_length=50, blank=True, null=True)
-    procesador = models.CharField(max_length=50, blank=True, null=True)
-    tipoRam = models.CharField(max_length=50, blank=True, null=True)
-    ram = models.CharField(max_length=50, blank=True, null=True)
-    tipoDisco = models.CharField(max_length=50, blank=True, null=True)
-    disco = models.CharField(max_length=50, blank=True, null=True)
-    serial = models.CharField(max_length=50, unique=True)
-    estado = models.CharField(max_length=20, default='Activo')
-    observaciones = models.CharField(max_length=300, blank=True, null=True)
-    ip = models.CharField(max_length=45, blank=True, null=True)
-    idUbicacion = models.ForeignKey(Lugar, on_delete=models.SET_NULL, null=True, blank=True, db_column='idUbicacion')
-    idPersona = models.ForeignKey(Persona, on_delete=models.SET_NULL, null=True, blank=True, db_column='idPersona')
+    id_equipo = models.AutoField(primary_key=True, db_column='id_equipo')
+    tipo = models.CharField(max_length=50, db_column='tipo')
+    aec = models.CharField(max_length=50, db_column='aec')
+    marca = models.CharField(max_length=50, blank=True, null=True, db_column='marca')
+    modelo = models.CharField(max_length=50, blank=True, null=True, db_column='modelo')
+    so = models.CharField(max_length=50, blank=True, null=True, db_column='so')
+    procesador = models.CharField(max_length=50, blank=True, null=True, db_column='procesador')
+    tipo_ram = models.CharField(max_length=50, blank=True, null=True, db_column='tipo_ram')
+    ram = models.CharField(max_length=50, blank=True, null=True, db_column='ram')
+    tipo_disco = models.CharField(max_length=50, blank=True, null=True, db_column='tipo_disco')
+    disco = models.CharField(max_length=50, blank=True, null=True, db_column='disco')
+    estado = models.CharField(max_length=20, default='Activo', db_column='estado')
+    estado_disco = models.CharField(max_length=50, blank=True, null=True, db_column='estado_disco')
+    serial = models.CharField(max_length=50, unique=True, db_column='serial')
+    observaciones = models.CharField(max_length=300, blank=True, null=True, db_column='observaciones')
+    ip = models.CharField(max_length=45, blank=True, null=True, db_column='ip')
+    
+    
+    id_lugar = models.ForeignKey(Lugar, on_delete=models.SET_NULL, null=True, blank=True, db_column='id_lugar')
+    id_users = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, db_column='id_users')
+    ip_maquina = models.CharField(max_length=45, blank=True, null=True, db_column='ip_maquina')
+    
+    
+    fecha_creacion = models.DateTimeField(auto_now_add=True, db_column='fecha_creacion')
+    fecha_modificacion = models.DateTimeField(auto_now=True, db_column='fecha_modificacion')
+    fecha_eliminacion = models.DateTimeField(null=True, blank=True, db_column='fecha_eliminacion')
+
+    creado_por = models.CharField(max_length=50, blank=True, null=True, db_column='creado_por')
+    modificado_por = models.CharField(max_length=50, blank=True, null=True, db_column='modificado_por')
+    eliminado_por = models.CharField(max_length=50, blank=True, null=True, db_column='eliminado_por')
 
     class Meta:
         db_table = 'Equipo'
 
     def __str__(self):
-        return f"{self.tipo} - {self.marca} {self.modelo}"
+        return f"{self.tipo} - {self.serial}"
+
+class Componente(models.Model):
+    id_componente = models.AutoField(primary_key=True, db_column='id_componente')
+    tipo = models.CharField(max_length=50, db_column='tipo')
+    aec = models.CharField(max_length=50, db_column='aec')
+    marca = models.CharField(max_length=50, blank=True, null=True, db_column='marca')
+    modelo = models.CharField(max_length=50, blank=True, null=True, db_column='modelo')
+    serial = models.CharField(max_length=50, unique=True, db_column='serial')
+    estado = models.CharField(max_length=20, default='Activo', db_column='estado')
+    observaciones = models.CharField(max_length=300, blank=True, null=True, db_column='observaciones')
+    id_equipo = models.ForeignKey(Equipo, on_delete=models.CASCADE, db_column='id_equipo')
+    id_users = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, db_column='id_users')
+    
+    fecha_creacion = models.DateTimeField(auto_now_add=True, db_column='fecha_creacion')
+    fecha_modificacion = models.DateTimeField(auto_now=True, db_column='fecha_modificacion')
+    fecha_eliminacion = models.DateTimeField(null=True, blank=True, db_column='fecha_eliminacion')
+
+    creado_por = models.CharField(max_length=50, blank=True, null=True, db_column='creado_por')
+    modificado_por = models.CharField(max_length=50, blank=True, null=True, db_column='modificado_por')
+    eliminado_por = models.CharField(max_length=50, blank=True, null=True, db_column='eliminado_por')
+    
+    
+    
+    class Meta:
+        db_table = 'Componente'
+
+    def __str__(self):
+        return f"{self.tipo} - {self.serial}"

@@ -3,21 +3,31 @@
 <div class="container mx-auto px-4 py-6">
     <div class="mb-6 flex justify-between items-center">
         <h1 class="text-2xl font-bold">Añadir Equipos</h1>
-        <button
-            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onclick="openModal('addEquipoModal')">
-            <i class="fa-solid fa-plus mr-2"></i> Crear Equipo
-        </button>
-    </div>
-</div>
+        <div class="space-x-4 flex justify-between">
 
+            <button
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onclick="openModal('addEquipoModal')">
+                <i class="fa-solid fa-plus mr-2"></i> Crear Equipo
+            </button>
+            <button
+                class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                onclick="openModal('addComponenteModal')">
+                <i class="fa-solid fa-plus mr-2"></i> Añadir Componentes
+            </button>
+        </div>
+    </div>
+
+</div>
+<!--   EQUIPOS -->
 <div class="container mx-auto px-4 py-6">
     <h1 class="text-2xl font-bold mb-4">Lista de Equipos</h1>
     <div class="overflow-auto rounded-lg shadow-lg border border-gray-200 ">
         <table class="min-w-full bg-white text-sm">
             <thead class="bg-blue-600 text-white sticky top-0 z-10">
                 <tr>
-                    <th class="px-4 py-2 text-right uppercase text-sm">N°</th>
+                    <th class="px-4 py-2 text-left uppercase text-sm">N°</th>
+                    <th class="px-4 py-2 text-left uppercase text-sm">ID</th>
                     <th class="px-4 py-2 text-left uppercase text-sm">Tipo</th>
                     <th class="px-4 py-2 text-left uppercase text-sm">AEC</th>
                     <th class="px-4 py-2 text-left uppercase text-sm">Marca</th>
@@ -25,22 +35,24 @@
                     <th class="px-4 py-2 text-left uppercase text-sm">SO</th>
                     <th class="px-4 py-2 text-left uppercase text-sm">Responsable</th>
                     <th class="px-4 py-2 text-left uppercase text-sm">Ubicación</th>
-                    <th class="px-4 py-2 text-right uppercase text-sm">Serial</th>
+                    <th class="px-4 py-2 text-left uppercase text-sm">Área</th>
                     <th class="px-4 py-2 text-left uppercase text-sm">Estado</th>
+                    <th class="px-4 py-2 text-left uppercase text-sm">Observaciones</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
                 {% for equipo in equipos %}
                 <tr class="hover:bg-gray-100">
-                    <td class="px-4 py-2 text-right font-mono">{{ forloop.counter }}</td>
+                    <td class="px-4 py-2">{{ forloop.counter }}</td>
+                    <td class="px-4 py-2">{{ equipo.idEquipo }}</td>
                     <td class="px-4 py-2">{{ equipo.tipo }}</td>
-                    <td class="px-4 py-2">{{ equipo.aec }}</td>
+                    <td class="px-4 py-2">AEC {{ equipo.aec }}</td>
                     <td class="px-4 py-2">{{ equipo.marca }}</td>
                     <td class="px-4 py-2">{{ equipo.modelo }}</td>
                     <td class="px-4 py-2">{{ equipo.so }}</td>
                     <td class="px-4 py-2">
                         {% if equipo.idPersona %}
-                        {{ equipo.idPersona.nombre }} {% if equipo.idPersona.apellidop %}{{ equipo.idPersona.apellidop}}
+                        {{ equipo.id_users.nombre }} {% if equipo.idPersona.apellidop %}{{ equipo.id_users.apellidop}}
                         {% endif %}
                         {% else %}
                         <span class="text-gray-400">Sin asignar</span>
@@ -48,19 +60,22 @@
                     </td>
                     <td class="px-4 py-2">
                         {% if equipo.idUbicacion %}
-                        {{ equipo.idUbicacion.nombre }}
+                        {{ equipo.id_lugar.nombre }}
                         {% else %}
                         <span class="text-gray-400">Sin asignar</span>
                         {% endif %}
                     </td>
-                    <td class="px-4 py-2 text-right font-mono">{{ equipo.serial }}</td>
+                    <td class="px-4 py-2">{{ equipo.id_lugar.area }}</td>
                     <td class="px-4 py-2">
                         {% if equipo.estado == 'Activo' %}
-                        <span class="px-3 py-1 rounded-full bg-green-500 text-white font-semibold">{{ equipo.estado}}</span>
+                        <span class="px-3 py-1 rounded-full bg-green-500 text-white font-semibold">
+                            {{ equipo.estado}}</span>
                         {% else %}
-                        <span class="px-3 py-1 rounded-full bg-red-500 text-white font-semibold">{{ equipo.estado   }}</span>
+                        <span class="px-3 py-1 rounded-full bg-red-500 text-white font-semibold">
+                            Inactivo</span>
                         {% endif %}
                     </td>
+                    <td class="px-4 py-2">{{ equipo.observaciones }}</td>
                 </tr>
                 {% empty %}
                 <tr>
@@ -72,8 +87,7 @@
     </div>
 </div>
 
-
-<!-- Modal -->
+<!-- Modal EQUIPO-->
 <div id="addEquipoModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden justify-center items-center z-50">
     <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl">
         <!-- Header -->
@@ -84,7 +98,7 @@
         </div>
 
         <!-- Body -->
-        <div class="p-6" id="dynamic-content">
+        <div class="p-6">
             <form hx-post="/equipos/agregar/" hx-target="#dynamic-content" hx-swap="innerHTML"
                 class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
@@ -168,20 +182,54 @@
     </div>
 </div>
 
-<!-- Scripts -->
-<script>
-    function openModal(modalId) {
-        const modal = document.getElementById(modalId);
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-    }
+<!-- Modal COMPONENTE-->
+<div id="addComponenteModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden justify-center items-center z-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl">
+        <!-- Header -->
+        <div class="flex justify-between items-center px-6 py-4 border-b">
+            <h2 class="text-xl font-semibold">Agregar Nuevo Componente</h2>
+            <button class="text-gray-500 hover:text-gray-700 text-2xl"
+                onclick="closeModal('addComponenteModal')">&times;</button>
+        </div>
 
-    function closeModal(modalId) {
-        const modal = document.getElementById(modalId);
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-    }
-</script>
+        <!-- Body -->
+        <div class="p-6">
+            <form method="POST" action="{% url 'equipo:agregar_lugar' %}" class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                hx-target="#dynamic-content" hx-swap="innerHTML">
 
+                {% csrf_token %}
+                <div>
+                    <label class="block text-sm font-medium">Nombre</label>
+                    <input type="text" name="nombre" class="w-full border rounded px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium">Dirección</label>
+                    <input type="text" name="direccion" class="w-full border rounded px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium">Área</label>
+                    <input type="text" name="area" class="w-full border rounded px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium">Ciudad</label>
+                    <input type="text" name="ciudad" class="w-full border rounded px-3 py-2">
+                </div>
+                <div class="md:col-span-2 flex justify-end space-x-2 pt-4">
+                    <button type="button" class="px-4 py-2 rounded border"
+                        onclick="closeModal('addComponenteModal')">Cancelar</button>
+                    <button type="submit"
+                        class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script src="{% static 'js/equipo/modal_equipo.js' %}"></script>
+<script src="{% static 'js/equipo/modal_componente.js' %}"></script>
 
 {% endblock %}

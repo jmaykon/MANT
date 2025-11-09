@@ -6,27 +6,34 @@
     <table class="min-w-full bg-white border border-gray-200">
         <thead>
             <tr class="bg-gray-100">
-                <th class="py-2 px-4 border-b">Equipo</th>
-                <th class="py-2 px-4 border-b">Tipo de Mantenimiento</th>
-                <th class="py-2 px-4 border-b">Fecha Programada</th>
+                <th class="py-2 px-4 border-b">ID</th>
+                <th class="py-2 px-4 border-b">Descripción</th>
+                <th class="py-2 px-4 border-b">Lugar</th>
+                <th class="py-2 px-4 border-b">Área</th>
+                <th class="py-2 px-4 border-b">Solicitante</th>
+                <th class="py-2 px-4 border-b">Fecha inicio</th>
+                <th class="py-2 px-4 border-b">Fecha fin</th>
                 <th class="py-2 px-4 border-b">Estado</th>
-                <th class="py-2 px-4 border-b">Acciones</th>
+
             </tr>
         </thead>
         <tbody>
             {% for mantenimiento in mantenimientos %}
             <tr>
-                <td class="py-2 px-4 border-b">{{ mantenimiento.equipo.nombre }}</td>
-                <td class="py-2 px-4 border-b">{{ mantenimiento.tipo }}</td>
-                <td class="py-2 px-4 border-b">{{ mantenimiento.fecha_programada }}</td>
+                <td class="py-2 px-4 border-b">{{ mantenimiento.id }}</td>
+                <td class="py-2 px-4 border-b">{{ mantenimiento.descripcion }}</td>
+                <td class="py-2 px-4 border-b">{{ mantenimiento.lugar.nombre }}</td>
+                <td class="py-2 px-4 border-b">{{ mantenimiento.lugar.area }}</td>
+                <td class="py-2 px-4 border-b">{{ mantenimiento.solicitante.username }}</td>
+                <td class="py-2 px-4 border-b">{{ mantenimiento.fecha_inicio_t|date:"d/m/Y" }}</td>
+                <td class="py-2 px-4 border-b">{{ mantenimiento.fecha_fin_t|date:"d/m/Y" }}</td>
                 <td class="py-2 px-4 border-b">{{ mantenimiento.estado }}</td>
-                <td class="py-2 px-4 border-b">
-                    <a href="{% url 'mante_detalle' mantenimiento.id %}" class="text-blue-600 hover:underline">Ver</a>
-                </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="5" class="py-4 text-center text-gray-500">No hay mantenimientos programados</td>
+                <td colspan="8" class="py-4 text-center text-gray-500">
+                    No hay mantenimientos programados
+                </td>
             </tr>
             {% endfor %}
         </tbody>

@@ -8,7 +8,7 @@ def role_required(role):
         def _wrapped_view(request, *args, **kwargs):
             if request.user.role == role:
                 return view_func(request, *args, **kwargs)
-            return render(request, 'core/403.html', status=403)  # opcional
+            return render(request, 'core/403.html', status=403)
         return _wrapped_view
     return decorator
 

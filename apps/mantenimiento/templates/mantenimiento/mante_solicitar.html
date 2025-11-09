@@ -1,12 +1,16 @@
 {% load static %}
 {% block content %}
 <div class="p-6 bg-white rounded-lg shadow">
-    <h2 class="text-xl font-semibold mb-4">Solicitar Mantenimiento Preventivo</h2>
-
-    <form hx-post="{% url 'mantenimiento:mante_solicitar' %}"
-          hx-target="#dashboard-content"
-          hx-swap="innerHTML"
-          class="space-y-4">
+    <h2 class="text-xl font-semibold mb-4 content-center">Solicitar Mantenimiento</h2>
+    <p class="text-sm text-justify"> <strong>El mantenimiento correctivo</strong> se realiza una vez que un equipo ha fallado o presenta una avería.
+         Se enfoca en reparar o restaurar el funcionamiento del equipo después de que ha ocurrido un problema.</p>
+    <p class="text-sm text-justify"> <strong>El mantenimiento preventivo</strong> se lleva a cabo de manera planificada y programada para prevenir fallos o averías en los equipos.
+         Se realiza antes de que ocurra un problema, con el objetivo de mantener los equipos en buen estado y prolongar su vida útil.</p>
+    <form 
+    hx-post="{% url 'mantenimiento:mante_solicitar' %}" 
+    hx-target="#dashboard-content" 
+    hx-swap="innerHTML"       
+    class="space-y-4">
         {% csrf_token %}
 
         <!-- Tipo -->
@@ -22,10 +26,11 @@
         <div>
             <label class="block text-sm font-medium text-gray-700">Descripción</label>
             <textarea name="descripcion" rows="3" class="w-full mt-1 border rounded p-2"
-                      placeholder="Describe el problema o solicitud..."></textarea>
+                placeholder="(Opcional) Describe el problema o solicitud..."></textarea>
         </div>
 
         <!-- Fechas tentativas -->
+        <h2 class="text-xl font-semibold mb-4">Fecha de tentativa de solicitud para realizar el mantenimiento</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
                 <label class="block text-sm font-medium text-gray-700">Fecha tentativa de inicio</label>
@@ -40,8 +45,7 @@
 
         <!-- Botón -->
         <div class="pt-2">
-            <button type="submit" 
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition">
                 Enviar solicitud
             </button>
         </div>

@@ -1,5 +1,4 @@
 {% load static %}
-
 <!-- Sidebar -->
 <aside id="sidebar"
     class="fixed left-0 top-0 h-full bg-gray-800 text-gray-200 shadow-md w-64 transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-50 flex flex-col">
@@ -23,21 +22,14 @@
         <!-- Menú principal -->
         <nav class="flex flex-col space-y-2 px-2 flex-grow">
             <h1 class="text-xl font-semibold text-center font-bold">Panel de Control</h1>
+
             {% if request.user.role == 'admin' %}
-            <li>
-                <a href="" class="flex items-center px-3 py-2 rounded-md hover:bg-gray-600">
-                    <img src="{% static 'images/pc.png' %}" class="w-6 h-6 mr-2"> Dashboard
-                </a>
-            </li>
-            {% endif %}
-          {% if request.user.role in 'admin tecnico' %}
-            <!-- USUARIOS PERSONA -->
             <li>
                 <!-- Botón principal del menú -->
                 <button
                     class="flex items-center justify-between w-full px-3 py-2 rounded-md hover:bg-gray-600 cursor-pointer agenda-toggle">
                     <span class="flex items-center">
-                        <img src="{% static 'images/pc.png' %}" class="w-6 h-6 mr-2"> Mantenimiento
+                        <img src="{% static 'images/pc.png' %}" class="w-6 h-6 mr-2"> Usuarios
                     </span>
                     <!-- Flecha para indicar submenú -->
                     <svg class="w-4 h-4 transform transition-transform duration-300" fill="none" stroke="currentColor"
@@ -47,20 +39,12 @@
                 </button>
 
                 <ul class="ml-6 mt-1 space-y-1 hidden agenda-submenu">
-                    <!-- Cronograma -->
+                    <!-- Lista de Usuarios -->
                     <li class="p-2 cursor-pointer rounded flex items-center gap-2      
-               hover:bg-gray-700 hover:text-white" hx-get="{% url 'mantenimiento:mante_cronograma' %}"
-                        hx-target="#dynamic-content" hx-swap="innerHTML">
+               hover:bg-gray-700 hover:text-white" hx-get="{% url 'users:user_list' %}" hx-target="#dynamic-content"
+                        hx-swap="innerHTML">
                         <i class="fa-solid fa-calendar-days text-current w-5 h-5"></i>
-                        Cronograma
-                    </li>
-
-                    <!-- Detalle -->
-                    <li class="p-2 cursor-pointer rounded flex items-center gap-2
-               hover:bg-gray-700 hover:text-white" hx-get="{% url 'mantenimiento:mante_detalle' %}"
-                        hx-target="#dynamic-content" hx-swap="innerHTML">
-                        <i class="fa-solid fa-file-lines text-current w-5 h-5"></i>
-                        Detalle
+                        Lista de Usuarios
                     </li>
                 </ul>
 
@@ -139,8 +123,7 @@
                 <ul class="ml-6 mt-1 space-y-1 hidden agenda-submenu">
                     <!-- Cronograma -->
                     <li class="p-2 cursor-pointer rounded flex items-center gap-2      
-               hover:bg-gray-700 hover:text-white" hx-get="{% url 'agenda:agenda_list' %}" hx-target="#dynamic-content"
-                        hx-swap="innerHTML">
+               hover:bg-gray-700 hover:text-white" hx-get="" hx-target="#dynamic-content" hx-swap="innerHTML">
                         <i class="fa-solid fa-calendar-days text-current w-5 h-5"></i>
                         Lista de Mantenimientos
                     </li>
@@ -167,16 +150,16 @@
                 <ul class="ml-6 mt-1 space-y-1 hidden agenda-submenu">
                     <!-- Lista de Equipos -->
                     <li class="p-2 cursor-pointer rounded flex items-center gap-2      
-               hover:bg-gray-700 hover:text-white" hx-get="{% url 'equipo:equipo_list' %}" 
+               hover:bg-gray-700 hover:text-white" hx-get="{% url 'equipo:lista_equipos' %}"
                         hx-target="#dynamic-content" hx-swap="innerHTML">
                         <i class="fa-solid fa-calendar-days text-current w-5 h-5"></i>
                         Lista de Equipos
                     </li>
                 </ul>
-                                <ul class="ml-6 mt-1 space-y-1 hidden agenda-submenu">
+                <ul class="ml-6 mt-1 space-y-1 hidden agenda-submenu">
                     <!-- Lista de Equipos -->
                     <li class="p-2 cursor-pointer rounded flex items-center gap-2      
-               hover:bg-gray-700 hover:text-white" hx-get="{% url 'equipo:equipo_list' %}" 
+               hover:bg-gray-700 hover:text-white" hx-get="{% url 'equipo:lista_equipos' %}"
                         hx-target="#dynamic-content" hx-swap="innerHTML">
                         <i class="fa-solid fa-calendar-days text-current w-5 h-5"></i>
                         Crear Equipo
@@ -185,6 +168,35 @@
 
             </li>
             {% endif %}
+            {% if request.user.role in 'admin tecnico' %}
+            <!-- Lugares -->
+            <li>
+                <!-- Botón principal del menú -->
+                <button
+                    class="flex items-center justify-between w-full px-3 py-2 rounded-md hover:bg-gray-600 cursor-pointer agenda-toggle">
+                    <span class="flex items-center">
+                        <img src="{% static 'images/pc.png' %}" class="w-6 h-6 mr-2"> Lugares
+                    </span>
+                    <!-- Flecha para indicar submenú -->
+                    <svg class="w-4 h-4 transform transition-transform duration-300" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+
+                <ul class="ml-6 mt-1 space-y-1 hidden agenda-submenu">
+                    <!-- Lista de Equipos -->
+                    <li class="p-2 cursor-pointer rounded flex items-center gap-2      
+               hover:bg-gray-700 hover:text-white" hx-get="{% url 'lugar:lugar_view' %}" hx-target="#dynamic-content"
+                        hx-swap="innerHTML">
+                        <i class="fa-solid fa-calendar-days text-current w-5 h-5"></i>
+                        Lista de Lugares
+                    </li>
+                </ul>
+
+            </li>
+            {% endif %}
+            {% if request.user.role in 'admin tecnico' %}
             <!-- Contacto -->
             <li>
                 <a href="#contacto" class="flex items-center px-3 py-2 rounded-md hover:bg-gray-700">
@@ -195,6 +207,7 @@
                     Contacto
                 </a>
             </li>
+            {% endif %}
 
         </nav>
 
@@ -214,5 +227,3 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
     </svg>
 </button>
-
-<!-- JS para menú -->
