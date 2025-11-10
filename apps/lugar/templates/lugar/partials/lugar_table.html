@@ -42,9 +42,8 @@
                     <td class="px-4 py-2">{{ lugar.ciudad }}</td>
                     <td class="px-4 py-2 flex space-x-3">
                         <!-- Botón Editar -->
-                        <button onclick="openModal('editar_lugar')"
+                        <button
                             class="group relative flex items-center justify-center p-2 rounded-full bg-yellow-100 text-yellow-600 shadow-md hover:bg-yellow-600 hover:text-white transition-all duration-300 transform hover:scale-110"
-                            hx-get="{% url 'lugar:editar_lugar' lugar.id_lugar %}" hx-target="#dynamic-content"
                             hx-swap="innerHTML">
                             <i class="fa-solid fa-pen"></i>
                             <span
@@ -54,15 +53,17 @@
                         </button>
                         <!-- Botón Eliminar -->
                         <button
-                            class="group relative flex items-center justify-center p-2 rounded-full bg-red-100 text-red-600 shadow-md hover:bg-red-600 hover:text-white transition-all duration-300 transform hover:scale-110"
-                            hx-delete="{% url 'lugar:eliminar_lugar' lugar.id_lugar %}" hx-target="#dynamic-content"
+                            class="btn-eliminar group relative flex items-center justify-center p-2 rounded-full bg-red-100 text-red-600 shadow-md hover:bg-red-600 hover:text-white transition-all duration-300 transform hover:scale-110"
+                            data-url="{% url 'lugar:eliminar_lugar' lugar.id_lugar %}" hx-target="#dynamic-content"
                             hx-swap="innerHTML">
+
                             <i class="fa-solid fa-trash"></i>
                             <span
                                 class="absolute opacity-0 group-hover:opacity-100 text-xs text-red-700 top-10 z-10 transition-all duration-300 transform group-hover:-translate-y-1">
                                 Eliminar
                             </span>
                         </button>
+
                     </td>
                 </tr>
                 {% empty %}
@@ -120,48 +121,7 @@
     </div>
 
 
-    <div id="editar_lugar" class="fixed inset-0 bg-gray-900 bg-opacity-50 hidden flex justify-center items-center z-50">
-        <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl">
-            <div class="flex justify-between items-center px-6 py-4 border-b">
-                <h2 class="text-xl font-semibold">Editar Lugar</h2>
-                <button class="text-gray-500 hover:text-gray-700 text-2xl"
-                    onclick="closeModal('editar_lugar')">&times;</button>
-                <div class="p-6">
-                    <form class="grid grid-cols-1 md:grid-cols-2 gap-4" hx-target="#dynamic-content"
-                        hx-swap="innerHTML">
-                        {% csrf_token %}
-                        <div>
-                            <label class="block text-sm font-medium">Nombre</label>
-                            <input type="text" name="nombre" class="w-full border rounded px-3 py-2">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">Dirección</label>
-                            <input type="text" name="direccion" class="w-full border rounded px-3 py-2">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">Área</label>
-                            <input type="text" name="area" class="w-full border rounded px-3 py-2">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium">Ciudad</label>
-                            <input type="text" name="ciudad" class="w-full border rounded px-3 py-2">
-                        </div>
-                        <div class="md:col-span-2 flex justify-end space-x-2 pt-4">
-                            <button type="button" class="px-4 py-2 rounded border"
-                                onclick="closeModal('agregar_lugar')">Cancelar</button>
-                            <button type="submit"
-                                class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Guardar</button>
-                        </div>
 
-                    </form>
-
-
-                </div>
-            </div>
-
-
-        </div>
-    </div>
 </div>
 
 
@@ -173,5 +133,5 @@
 
 
 <script src="{% static 'js/lugar/add.js' %}"></script>
-<script src="{% static 'js/lugar/deleted.js' %}"></script>
+<script src="{% static 'js/sweet_alert.js' %}"></script>
 <script src="{% static 'js/lugar/edit.js' %}"></script>

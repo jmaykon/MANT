@@ -62,25 +62,10 @@ def eliminar_lugar(request, id):
         except Lugar.DoesNotExist:
             pass
         
-        # Retorna la tabla actualizada solo con activos
         lugares = Lugar.objects.filter(fecha_eliminacion__isnull=True)
         return render(request, 'lugar/partials/lugar_table.html', {'lugares': lugares})
 
     return redirect('lugar:lista_lugares')
-
-
-@role_required(roles=["admin", "tecnico"])
-def editar_lugar(request, id):
-    lugar = get_object_or_404(Lugar, id_lugar=id)
-    if request.method == "POST":
-        lugar.nombre = request.POST.get("nombre")
-        lugar.direccion = request.POST.get("direccion")
-        lugar.area = request.POST.get("area")
-        lugar.ciudad = request.POST.get("ciudad")
-        lugar.save()
-        lugares = Lugar.objects.filter(fecha_eliminacion__isnull=True)
-        return render(request, "lugar/lugar_table.html", {"lugares": lugares})
-    return render(request, "lugar/editar_form_inline.html", {"lugar": lugar})
 
 
 
