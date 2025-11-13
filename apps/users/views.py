@@ -6,18 +6,12 @@ from django.contrib import messages
 from .forms import LoginForm
 from .models import UsersCustomUser
 from apps.users.decorators import role_required
-
 from .models import Equipo
 from .models import Lugar
-
 from django.http import JsonResponse
-
-
 from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.contrib.auth.hashers import make_password
-
-
 from django.contrib.auth import get_user_model
 from .forms import UserCreateForm  # Importa el formulario que creamos
 

@@ -1,49 +1,78 @@
 {% load static %}
 {% block content %}
 <div class="p-6 bg-white rounded-lg shadow">
-    <h2 class="text-xl font-semibold mb-4 content-center">Solicitar Mantenimiento</h2>
-    <p class="text-sm text-justify"> <strong>El mantenimiento correctivo</strong> se realiza una vez que un equipo ha fallado o presenta una avería.
-         Se enfoca en reparar o restaurar el funcionamiento del equipo después de que ha ocurrido un problema.</p>
-    <p class="text-sm text-justify"> <strong>El mantenimiento preventivo</strong> se lleva a cabo de manera planificada y programada para prevenir fallos o averías en los equipos.
-         Se realiza antes de que ocurra un problema, con el objetivo de mantener los equipos en buen estado y prolongar su vida útil.</p>
-    <form 
-    hx-post="{% url 'mantenimiento:mante_solicitar' %}" 
-    hx-target="#dashboard-content" 
-    hx-swap="innerHTML"       
-    class="space-y-4">
+    <h4 class="text-2xl content-center font-bold mb-4">SOLICITAR SOPORTE</h4>
+
+    <p class="text-sm text-justify">
+        <strong>El mantenimiento correctivo</strong> se realiza una vez que un equipo ha fallado...
+    </p>
+    <p class="text-sm text-justify">
+        <strong>El mantenimiento preventivo</strong> se realiza de manera planificada...
+    </p>
+
+    <form hx-post="{% url 'mantenimiento:mante_solicitar' %}" hx-target="#dashboard-content" hx-swap="innerHTML"
+        class="space-y-4">
         {% csrf_token %}
 
-        <!-- Tipo -->
         <div>
-            <label class="block text-sm font-medium text-gray-700">Tipo de mantenimiento</label>
-            <select name="tipo" class="w-full mt-1 border rounded p-2">
-                <option value="preventivo">Preventivo</option>
-                <option value="correctivo">Correctivo</option>
+            <label class="block text-sm font-bold text-gray-700">Tipo de Soporte</label>
+            <select name="tipo" id="tipo_soporte" class="w-full mt-1 border rounded p-2">
+                <option value="">Seleccione...</option>
+                <option value="preventivo">Mantenimiento Preventivo</option>
+                <option value="correctivo">Mantenimiento Correctivo</option>
+                <option value="recarga_tinta">Recarga de Tinta</option>
+                <option value="soporte_usuario">Soporte al Usuario</option>
             </select>
         </div>
 
-        <!-- Descripción -->
+        <div id="colores_tinta" class="hidden">
+            <label class="block text-sm font-bold text-gray-700 mb-2">Colores a recargar</label>
+            <div class="flex flex-row justify-center space-x-8">
+                <!-- Yellow -->
+                <label class="flex flex-col items-center space-y-1 cursor-pointer">
+                    <img src="{% static 'images/colores/yellow.png' %}" alt="Yellow"
+                        class="w-25 h-30 rounded-full border">
+                    <span class="text-sm font-medium">Yellow</span>
+                    <input type="checkbox" name="colores" value="yellow"
+                        class="w-6 h-6 border-2 border-gray-400 rounded">
+                </label>
+
+                <!-- Cian -->
+                <label class="flex flex-col items-center space-y-1 cursor-pointer">
+                    <img src="{% static 'images/colores/cian.png' %}" alt="Cian" class="w-25 h-30 rounded-full border">
+                    <span class="text-sm font-medium">Cian</span>
+                    <input type="checkbox" name="colores" value="cian" class="w-6 h-6 border-2 border-gray-400 rounded">
+                </label>
+
+                <!-- Magenta -->
+                <label class="flex flex-col items-center space-y-1 cursor-pointer">
+                    <img src="{% static 'images/colores/magenta.png' %}" alt="Magenta"
+                        class="w-25 h-30 rounded-full border">
+                    <span class="text-sm font-medium">Magenta</span>
+                    <input type="checkbox" name="colores" value="magenta"
+                        class="w-6 h-6 border-2 border-gray-400 rounded">
+                </label>
+
+                <!-- Todos -->
+                <label class="flex flex-col items-center space-y-1 cursor-pointer">
+                    <img src="{% static 'images/colores/all.png' %}" alt="Todos" class="w-25 h-30 rounded-full border">
+                    <span class="text-sm font-medium">Todos</span>
+                    <input type="checkbox" name="colores" value="todos"
+                        class="w-6 h-6 border-2 border-gray-400 rounded">
+                </label>
+            </div>
+        </div>
+
+
+
+
+
         <div>
             <label class="block text-sm font-medium text-gray-700">Descripción</label>
             <textarea name="descripcion" rows="3" class="w-full mt-1 border rounded p-2"
-                placeholder="(Opcional) Describe el problema o solicitud..."></textarea>
+                placeholder="(Opcional) Describe el problema o solicitud"></textarea>
         </div>
 
-        <!-- Fechas tentativas -->
-        <h2 class="text-xl font-semibold mb-4">Fecha de tentativa de solicitud para realizar el mantenimiento</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Fecha tentativa de inicio</label>
-                <input type="date" name="fecha_inicio" class="w-full mt-1 border rounded p-2">
-            </div>
-
-            <div>
-                <label class="block text-sm font-medium text-gray-700">Fecha tentativa de fin</label>
-                <input type="date" name="fecha_fin" class="w-full mt-1 border rounded p-2">
-            </div>
-        </div>
-
-        <!-- Botón -->
         <div class="pt-2">
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition">
                 Enviar solicitud
@@ -51,4 +80,6 @@
         </div>
     </form>
 </div>
+
+<script src="{% static 'js/mantenimiento/solicitar_tinta.js' %}"></script>
 {% endblock %}

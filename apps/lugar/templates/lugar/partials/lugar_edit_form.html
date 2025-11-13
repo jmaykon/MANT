@@ -1,0 +1,32 @@
+<form method="POST" action="{% url 'lugar:editar_lugar' lugar.id_lugar %}"
+    hx-post="{% url 'lugar:editar_lugar' lugar.id_lugar %}" hx-target="#dynamic-content" hx-swap="innerHTML"
+    class="grid grid-cols-1 md:grid-cols-2 gap-4" data-accion="editar">
+    {% csrf_token %}
+
+    <div>
+        <label class="block text-sm font-medium">Nombre</label>
+        <input type="text" name="nombre" value="{{ lugar.nombre }}" class="w-full border rounded px-3 py-2" required>
+    </div>
+
+    <div>
+        <label class="block text-sm font-medium">Dirección</label>
+        <input type="text" name="direccion" value="{{ lugar.direccion }}" class="w-full border rounded px-3 py-2"
+            required>
+    </div>
+
+    <div>
+        <label class="block text-sm font-medium">Área</label>
+        <input type="text" name="area" value="{{ lugar.area }}" class="w-full border rounded px-3 py-2" required>
+    </div>
+
+    <div>
+        <label class="block text-sm font-medium">Ciudad</label>
+        <input type="text" name="ciudad" value="{{ lugar.ciudad }}" class="w-full border rounded px-3 py-2" required>
+    </div>
+
+    <div class="md:col-span-2 flex justify-end space-x-2 pt-4">
+        <button type="button" class="px-4 py-2 rounded border" onclick="closeModal('editar_lugar')">Cancelar</button>
+        <button type="submit" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Guardar
+            Cambios</button>
+    </div>
+</form>

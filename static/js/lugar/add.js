@@ -1,13 +1,18 @@
-function openModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (!modal) return;
-    modal.classList.remove('hidden');
-    modal.classList.add('flex'); // opcional: si usas flex para centrar
-}
+document.body.addEventListener('htmx:afterRequest', function (evt) {
+    // evt.detail.elt es el elemento que disparó la petición
+    const el = evt.detail.elt;
 
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (!modal) return;
-    modal.classList.add('hidden');
-    modal.classList.remove('flex');
-}
+    if (el.closest("form[data-accion='agregar']")) {
+        // Cerrar modal
+        closeModal('agregar_lugar');
+
+        // Mostrar SweetAlert
+        Swal.fire({
+            title: "¡Éxito!",
+            text: "Lugar agregado correctamente.",
+            icon: "success",
+            draggable: true,
+            confirmButtonColor: "#2563eb"
+        });
+    }
+});

@@ -1,11 +1,9 @@
 {% load static %}
-<div class="container mx-auto px-4 py-6">
-
-    <div class="container mx-auto px-4 py-6">
+<div class="container mx-auto">
+    <div class="container">
         <div class="mb-6 flex justify-content items-center">
             <h1 class="text-2xl font-bold"></h1>
             <div class="space-x-4 flex justify-between">
-
                 <button
                     class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
                     onclick="openModal('agregar_lugar')">
@@ -17,65 +15,70 @@
 
     </div>
 
-    <h1 class="text-2xl font-bold mb-4">Lista de Lugares</h1>
-    <div class="overflow-auto rounded-lg shadow-lg border border-gray-200 ">
-        <table class="min-w-full bg-white text-sm">
-            <thead class="bg-blue-600 text-white sticky top-0 z-10">
-                <tr>
-                    <th class="px-4 py-2 text-left uppercase text-sm">N°</th>
-                    <th class="px-4 py-2 text-left uppercase text-sm">Id</th>
-                    <th class="px-4 py-2 text-left uppercase text-sm">Nombre</th>
-                    <th class="px-4 py-2 text-left uppercase text-sm">Dirección</th>
-                    <th class="px-4 py-2 text-left uppercase text-sm">Área</th>
-                    <th class="px-4 py-2 text-left uppercase text-sm">Ciudad</th>
-                    <th class="px-4 py-2 text-left uppercase text-sm">Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-                {% for lugar in lugares %}
-                <tr class="hover:bg-gray-100">
-                    <td class="px-4 py-2">{{ forloop.counter }}</td>
-                    <td class="px-4 py-2">{{ lugar.id_lugar }}</td>
-                    <td class="px-4 py-2">{{ lugar.nombre }}</td>
-                    <td class="px-4 py-2">{{ lugar.direccion }}</td>
-                    <td class="px-4 py-2">{{ lugar.area }}</td>
-                    <td class="px-4 py-2">{{ lugar.ciudad }}</td>
-                    <td class="px-4 py-2 flex space-x-3">
-                        <!-- Botón Editar -->
-                        <button
-                            class="group relative flex items-center justify-center p-2 rounded-full bg-yellow-100 text-yellow-600 shadow-md hover:bg-yellow-600 hover:text-white transition-all duration-300 transform hover:scale-110"
-                            hx-swap="innerHTML">
-                            <i class="fa-solid fa-pen"></i>
-                            <span
-                                class="absolute opacity-0 group-hover:opacity-100 text-xs text-yellow-700 z-10 transition-all duration-300 transform group-hover:-translate-y-1">
-                                Editar
-                            </span>
-                        </button>
-                        <!-- Botón Eliminar -->
-                        <button
-                            class="btn-eliminar group relative flex items-center justify-center p-2 rounded-full bg-red-100 text-red-600 shadow-md hover:bg-red-600 hover:text-white transition-all duration-300 transform hover:scale-110"
-                            data-url="{% url 'lugar:eliminar_lugar' lugar.id_lugar %}" hx-target="#dynamic-content"
-                            hx-swap="innerHTML">
+    <!-- Lista Lugares -->
+    <div class="container mx-auto px-4 py-6">
+        <h1 class="text-2xl font-bold mb-4">Lista de Lugares</h1>
+        <div class="overflow-x-auto overflow-y-hidden rounded-lg shadow-lg border border-gray-200">
+            <table class="min-w-full bg-white text-sm whitespace-nowrap max-w-full">
+                <thead class="bg-blue-600 text-white sticky top-0">
+                    <tr>
+                        <th class="px-4 py-2 text-left uppercase text-sm">N°</th>
 
-                            <i class="fa-solid fa-trash"></i>
-                            <span
-                                class="absolute opacity-0 group-hover:opacity-100 text-xs text-red-700 top-10 z-10 transition-all duration-300 transform group-hover:-translate-y-1">
-                                Eliminar
-                            </span>
-                        </button>
+                        <th class="px-4 py-2 text-left uppercase text-sm">Nombre</th>
+                        <th class="px-4 py-2 text-left uppercase text-sm">Dirección</th>
+                        <th class="px-4 py-2 text-left uppercase text-sm">Área</th>
+                        <th class="px-4 py-2 text-left uppercase text-sm">Ciudad</th>
+                        <th class="px-4 py-2 text-left uppercase text-sm">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for lugar in lugares %}
+                    <tr class="hover:bg-gray-100 even:bg-gray-100 hover:bg-gray-200 transition-colors">
+                        <td class="px-4 py-2 text-sm">{{ forloop.counter }}</td>
+                        <td class="px-4 py-2 text-sm">{{ lugar.nombre }}</td>
+                        <td class="px-4 py-2 text-sm">{{ lugar.direccion }}</td>
+                        <td class="px-4 py-2 text-sm">{{ lugar.area }}</td>
+                        <td class="px-4 py-2 text-sm">{{ lugar.ciudad }}</td>
+                        <td class="px-4 py-2 flex uppercase text-sm space-x-3">
+                            <!-- Botón Editar -->
+                            <button
+                                class="btn-editar group relative flex items-center justify-center p-2 rounded-full bg-yellow-100 text-yellow-600 hover:bg-yellow-600 hover:text-white transition"
+                                hx-get="{% url 'lugar:editar_lugar' lugar.id_lugar %}" hx-target="#modal-edit-body"
+                                hx-swap="innerHTML" onclick="openModal('editar_lugar')">
+                                <i class="fa-solid fa-pen"></i>
+                                <span
+                                    class="absolute opacity-0 group-hover:opacity-100 text-xs text-yellow-700 top-8 z-20 transition-all duration-300 transform group-hover:-translate-y-1">
+                                    Editar
+                                </span>
+                            </button>
 
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="10" class="px-4 py-6 text-center text-gray-400">
-                        No hay Lugares registrados
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                            <!-- Botón Eliminar -->
+                            <button
+                                class="btn-eliminar group relative flex items-center justify-center p-2 rounded-full bg-red-100 text-red-600 shadow-md hover:bg-red-600 hover:text-white transition-all duration-300 transform hover:scale-110"
+                                data-url="{% url 'lugar:eliminar_lugar' lugar.id_lugar %}" hx-target="#dynamic-content"
+                                hx-swap="innerHTML">
+                                <i class="fa-solid fa-trash"></i>
+                                <span
+                                    class="absolute opacity-0 group-hover:opacity-100 text-xs text-red-700 top-8 z-20 transition-all duration-300 transform group-hover:-translate-y-1">
+                                    Eliminar
+                                </span>
+                            </button>
+                        </td>
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="10" class="px-4 py-6 text-center text-gray-400">
+                            No hay Lugares registrados
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
     </div>
+
 
 
     <!-- Modal Añadir Lugar -->
@@ -89,12 +92,12 @@
             </div>
             <div class="p-6">
                 <form method="POST" action="{% url 'lugar:agregar_lugares' %}"
-                    class="grid grid-cols-1 md:grid-cols-2 gap-4" hx-post="{% url 'lugar:agregar_lugares' %}"
-                    hx-target="#dynamic-content" hx-swap="innerHTML">
+                    hx-post="{% url 'lugar:agregar_lugares' %}" hx-target="#dynamic-content" hx-swap="innerHTML"
+                    data-accion="agregar" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {% csrf_token %}
                     <div>
                         <label class="block text-sm font-medium">Nombre</label>
-                        <input type="text" name="nombre" class="w-full border rounded px-3 py-2">
+                        <input type="text" name="nombre" class="w-full border rounded px-3 py-2" required>
                     </div>
                     <div>
                         <label class="block text-sm font-medium">Dirección</label>
@@ -111,10 +114,12 @@
                     <div class="md:col-span-2 flex justify-end space-x-2 pt-4">
                         <button type="button" class="px-4 py-2 rounded border"
                             onclick="closeModal('agregar_lugar')">Cancelar</button>
-                        <button type="submit"
-                            class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Guardar</button>
+                        <button type="submit" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">
+                            Guardar
+                        </button>
                     </div>
                 </form>
+
 
             </div>
         </div>
@@ -122,16 +127,13 @@
 
 
 
-</div>
 
 
-
-
-</div>
 
 </div>
 
 
 <script src="{% static 'js/lugar/add.js' %}"></script>
+<script src="{% static 'js/lugar/deleted.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'js/sweet_alert.js' %}"></script>
-<script src="{% static 'js/lugar/edit.js' %}"></script>
